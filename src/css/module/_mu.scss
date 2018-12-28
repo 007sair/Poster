@@ -1,0 +1,248 @@
+/**
+ * 页面弹层
+ * html: 
+    <div class="mu_modal-mask"></div>
+    <div class="mu_modal-container">
+        <!-- 自定义html -->
+    </div>
+ */
+
+ $pre: 'mu_modal';
+ $zindex: 20161205;
+ $duration: 0.25s;
+ $theme_color: #d66868;
+ $icon_loading: "data:image/svg+xml;charset=utf8, <svg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 100 100'><path fill='none' d='M0 0h100v100H0z'/><rect width='7' height='20' x='46.5' y='40' fill='%23E9E9E9' rx='5' ry='5' transform='translate(0 -30)'/><rect width='7' height='20' x='46.5' y='40' fill='%23989697' rx='5' ry='5' transform='rotate(30 105.98 65)'/><rect width='7' height='20' x='46.5' y='40' fill='%239B999A' rx='5' ry='5' transform='rotate(60 75.98 65)'/><rect width='7' height='20' x='46.5' y='40' fill='%23A3A1A2' rx='5' ry='5' transform='rotate(90 65 65)'/><rect width='7' height='20' x='46.5' y='40' fill='%23ABA9AA' rx='5' ry='5' transform='rotate(120 58.66 65)'/><rect width='7' height='20' x='46.5' y='40' fill='%23B2B2B2' rx='5' ry='5' transform='rotate(150 54.02 65)'/><rect width='7' height='20' x='46.5' y='40' fill='%23BAB8B9' rx='5' ry='5' transform='rotate(180 50 65)'/><rect width='7' height='20' x='46.5' y='40' fill='%23C2C0C1' rx='5' ry='5' transform='rotate(-150 45.98 65)'/><rect width='7' height='20' x='46.5' y='40' fill='%23CBCBCB' rx='5' ry='5' transform='rotate(-120 41.34 65)'/><rect width='7' height='20' x='46.5' y='40' fill='%23D2D2D2' rx='5' ry='5' transform='rotate(-90 35 65)'/><rect width='7' height='20' x='46.5' y='40' fill='%23DADADA' rx='5' ry='5' transform='rotate(-60 24.02 65)'/><rect width='7' height='20' x='46.5' y='40' fill='%23E2E2E2' rx='5' ry='5' transform='rotate(-30 -5.98 65)'/></svg>";
+ 
+ @import '../base/BEM';
+
+ @mixin font-dpr($font-size) {
+	font-size: $font-size;
+	[data-dpr="2"] & {
+		font-size: $font-size * 2;
+	}
+	[data-dpr="3"] & {
+		font-size: $font-size * 3;
+	}
+}
+ 
+ @include b(#{$pre}) {
+ 
+     // body fix
+     // 解决移动端打开弹层后底层页面还能上下滑动问题
+     @include e(body) {
+         @include m(fixed) {
+             position: fixed; // 兼容safari及iPhone
+             overflow-y: hidden;
+             left: 0;
+             right: 0;
+         }
+     }
+ 
+     // wrap
+     @include e(wrap) {
+         @include font-dpr(14PX);
+         position: relative;
+         z-index: $zindex;
+     }
+ 
+     // mask
+     @include e(mask) {
+         position: fixed;
+         top: 0;
+         left: 0;
+         width: 100%; 
+         height: 100%;
+         background-color: rgba(17, 17, 17, 0.7);
+         transition: all $duration ease;
+     }
+ 
+     // container
+     @include e(container) {
+         position: fixed;
+         top: 0;
+         left: 0;
+         right: 0;
+         bottom: 0;
+         display: flex;
+         align-items: center;
+         justify-content: center;
+         pointer-events: none;
+     }
+ 
+     // main
+     @include e(main) {
+         pointer-events: auto;
+         transition: all $duration ease;
+     }
+ 
+     // default
+     @include e(default) {
+         background-color: #fff;
+     }
+ 
+     // slide
+     @include e(slide) {
+         position: absolute;
+     }
+ 
+     // slide top
+     @include e(slide_top) {
+         top: 0;
+         right: 0;
+         left: 0;
+         transform: translate(0, -100%);
+     }
+ 
+     // slide right
+     @include e(slide_right) {
+         top: 0;
+         right: 0;
+         bottom: 0;
+         transform: translate(100%, 0);
+     }
+ 
+     // slide bottom
+     @include e(slide_bottom) {
+         left: 0;
+         right: 0;
+         bottom: 0;
+         transform: translate(0, 100%);
+     }
+ 
+     // slide left
+     @include e(slide_left) {
+         top: 0;
+         left: 0;
+         bottom: 0;
+         transform: translate(-100%, 0);
+     }
+ 
+     // toast
+     @include e(toast) {
+         padding: 0.5em 1em;
+         background-color: rgba(17, 17, 17, 0.7);
+         color: #fff;
+         max-width: 75%;
+         border-radius: 0.25em;
+         word-break: break-all;
+     }
+ 
+     // alert
+     @include e(alert) {
+         background-color: #fff;
+         width: 70%;
+         max-width: 300PX;
+         text-align: center;
+         border-radius: 0.25em;
+         [data-dpr="2"] & {
+            max-width: 300PX * 2;
+         }
+         [data-dpr="3"] & {
+            max-width: 300PX * 3;
+         }
+     }
+ 
+     // alert content
+     @include e(alert_content) {
+         padding: 1em 1em 2em;
+         font-size: 1.1em;
+     }
+ 
+     // alert btn
+     @include e(alert_btns) {
+         display: flex;
+         border-top: 1PX solid rgba(204, 204, 204, 0.5);
+         > span {
+             flex: 1;
+             height: 2.8em;
+             line-height: 2.8em;
+             border-right: 1PX solid rgba(204, 204, 204, 0.5);
+             background-color: #f2f2f2;
+             font-size: 1em;
+             cursor: pointer;
+             &:last-child {
+                 border-right: none;
+             }
+             &[yes] {
+                 color: $theme_color
+             }
+         }
+     }
+ 
+     // title
+     @include e(title) {
+         padding: 1em 0;
+         font-size: 1em;
+     }
+ 
+     // loading
+     @include e(loading) {
+         padding: 1.2em 1em;
+         background-color: rgba(17, 17, 17, 0.7);
+         text-align: center;
+         font-size: 1.1em;
+         color: #fff;
+         border-radius: 0.4em;
+         &:before {
+             content: '';
+             display: inline-block;
+             vertical-align: middle;
+             background: url($icon_loading) center no-repeat;
+             background-size: 100%;
+             width: 40PX;
+             height: 40PX;
+             animation: stepLoading 1s steps(12, end) infinite;
+         }
+         > p {
+             min-width: 5em;
+             margin-top: 0.5em;
+         }
+     }
+ 
+ 
+     /*** 动画效果 与 options.animate 同名 ***/
+ 
+     // fade
+     @include e(fade) {
+         opacity: 0;
+         @include m(in) {
+             opacity: 1;
+         }
+     }
+ 
+     // scale
+     @include e(scale) {
+         transform: scale(0.01);
+         @include m(in) {
+             transform: scale(1);
+         }
+     }
+ 
+     // slide
+     @include e(slide) {
+         @include m(in) {
+             transform: translate(0, 0)
+         }
+     }
+ 
+     // up
+     @include e(up) {
+         position: absolute;
+         bottom: 0;
+         transform: translateY(200%);
+         @include m(in) {
+             bottom: 30%;
+             transform: translateY(0);
+         }
+     }
+ 
+ }
+  
+ @keyframes stepLoading {
+     0% {
+         transform: rotate3d(0, 0, 1, 0deg);
+     }
+     100% {
+         transform: rotate3d(0, 0, 1, 360deg);
+     }
+ }

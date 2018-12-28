@@ -1,0 +1,491 @@
+/*** px2rem的配置 ***/
+@use postcss-pxtorem {
+	rootValue: 75; 		//基数  1rem = 75px
+	replace: true;      //false：不替换当前属性为px，会再生成一条相同的属性，rem的优先级更高
+	propList: ['*'];	//匹配属性列表，*号代表匹配所有属性
+	minPixelValue: 2;   //忽略1px的转换 只转换大于1px的值
+};
+
+/*** Sass工具 ***/
+@import "base/mixin";  //混合器
+
+/*** 样式初始化 ***/
+@import "base/reset";  //样式重置
+@import "base/media";  //媒体查询
+
+/* page style */
+@import 'module/mu';
+@import 'module/loading';
+@import 'module/fullpage';
+@import 'module/iphoneX';
+@import 'module/uploader';
+
+@import "var";		   //变量
+@import "common";	   //公共样式
+
+html, body, #app {
+	height: 100%;
+}
+
+.page {
+	&.page-blur {
+		filter: blur(10px);
+	}
+}
+
+.wrapper {
+	$font-size: 12PX;
+	margin: 0 auto;
+	max-width: 640PX;
+	overflow: hidden;
+	[data-dpr="2"] & {
+		font-size: $font-size * 2;
+		max-width: 640PX * 2;
+	}
+	[data-dpr="3"] & {
+		font-size: $font-size * 3;
+		max-width: 640PX * 3;
+	}
+	.page {
+		overflow: hidden;
+	}
+}
+
+.page-1 {
+	background-size: 100%;
+	background-repeat: no-repeat;
+
+	// 上传按钮
+	.btn-upload {
+		$w: 320px;
+		$h: 100px;
+	
+		-s-position: absolute _ _ 11% 50%;
+		transform: translate(-50%, 0);
+		size: $w $h;
+		color: #fff;
+		font-size: 36px;
+		text-indent: -999em;
+		text-align: center;
+		line-height: $h;
+		border-radius: 3em;
+		overflow: hidden;
+		z-index: 5;
+		cursor: pointer;
+		border: none;
+		background: url($btn_cover) no-repeat;
+		background-size: 100%;
+	
+		// &.disabled {
+		// 	background-color: #999;
+		// }
+	}
+}
+
+.area-canvas {
+	@include center('flex');
+	position: relative;
+	height: 100%;
+	overflow: hidden;
+
+	// 舞台
+	.stage {
+		position: relative;
+		margin: 0 auto;
+		background-size: 100%;
+		background-position: center top;
+		background-repeat: no-repeat;
+		overflow: hidden;
+	}
+
+	// 元件
+	.cell {
+		// 不能在这里添加top、left偏移值，会出现保存图片位置不准bug
+		// 需要偏移的话需要js添加并进行计算
+		-s-position: absolute 0 _ _ 0;
+		box-sizing: border-box;
+		// border: 2px solid transparent;
+		cursor: pointer;
+
+		i[class*=btn-] {
+			display: none;
+			position: absolute;
+			border-radius: 100%;
+			size: 44px;
+			z-index: 2;
+			background-color: rgba(248, 145, 177, 0.85);
+			&::after {
+				content: '';
+				display: block;
+				size: 100%;
+			}
+		}
+
+		// 水平反转按钮
+		.btn-flip {
+			top: -22px;
+			left: -22px;
+			&::after {
+				background: url($btn_flip) no-repeat center;
+				background-size: 60%;
+			}
+		}
+
+		// 关闭按钮
+		.btn-close {
+			// @include icon-close(24px, 3px, #000);
+			top: -22px;
+			right: -22px;
+			background-color: rgba(255, 255, 255, 0.85) !important;
+			&::after {
+				background: url($btn_del) no-repeat center;
+				background-size: 70%;
+			}
+		}
+
+		// 拖拽缩放旋转按钮
+		.btn-drag {
+			right: -22px;
+			bottom: -22px;
+			cursor: move;
+			&:after {
+				background: url($btn_drag) no-repeat center;
+				background-size: 80%;
+			}
+		}
+
+		// 拖拽缩放旋转按钮
+		.btn-edit {
+			left: -22px;
+			top: -22px;
+			&:after {
+				background: url($btn_edit) no-repeat center;
+				background-size: 60%;
+			}
+		}
+
+		// +1
+		.btn-copy {
+			left: -22px;
+			bottom: -22px;
+			background-color: rgba(29, 129, 255, 0.8);
+			cursor: move;
+			&:after {
+				background: url($btn_copy) no-repeat center;
+				background-size: 70%;
+			}
+		}
+
+		// 图片和文字不触发事件
+		img, .txt {
+			pointer-events: none;
+		}
+
+		// 选中
+		&.selected {
+			background-color: rgba(0, 0, 0, 0.2);
+
+			i[class*=btn-] {
+				display: block;
+			}
+		}
+
+		// 贴纸文字
+		&.cell-text {
+			max-width: 90%;
+			.txt {
+				word-break: break-all;
+				line-height: 1.4;
+				font-family: "Helvetica Neue", Helvetica, Arial, "PingFang SC", "Hiragino Sans GB", "Heiti SC", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
+			}
+		}
+	}
+
+	// 前景不触发事件
+	.cell-front {
+		pointer-events: none;
+	}
+}
+
+// 舞台下方操作区
+.area-actions {
+
+	$bg: #fff;
+
+	-s-position: absolute _ 0 0 0;
+	text-align: center;
+	z-index: 5;
+
+	// 选项卡
+	.action-tab {
+		@include clearfix;
+		position: absolute;
+		left: 20px;
+		transform: translateY(-100%);
+		text-align: left;
+		$height: 55px;
+		> a {
+			position: relative;
+			padding: 12px 30px 0;
+			float: left;
+			height: $height;
+			font-size: 24px;
+			color: #fff;
+			box-sizing: border-box;
+
+			&:after {
+				content: '';
+				-s-position: absolute -0.5em 0 0 0;
+				background: $theme_color;
+				border: 1px solid rgba(0,0,0,.3);
+				border-bottom: none;
+				border-radius: .5em .5em 0 0;
+				box-shadow: 0 .15em white inset;
+				transform: perspective(1em) rotateX(5deg);
+				transform-origin: bottom;
+			}
+
+			> span {
+				position: relative;
+				z-index: 2;
+			}
+
+			&.active {
+				z-index: 1;
+				color: #333;
+				&:after {
+					bottom: -1px;
+					background: $bg;
+				}
+			}
+		}
+	}
+
+	// 背景图、贴纸区
+	.action-images {
+		padding: 20px;
+		background-color: $bg;
+		border-top: 1px solid rgba(0,0,0,.1);
+		ul {
+			@include scrollbar;
+			text-align: left;
+		}
+		li {
+			$w: 95px;
+			$h: $w / $bg_ratio;
+
+			position: relative;
+			display: inline-block;
+			vertical-align: top;
+			margin-right: 30px;
+			size: $w $h;
+			text-align: center;
+			background-color: #fff;
+
+			> img {
+				-s-position: absolute 50% _ _ 50%;
+				max-width: 100%;
+				max-height: 100%;
+				transform: translate(-50%, -50%);
+			}
+
+			&.active {
+				&::after {
+					content: '';
+					-s-position: absolute 0 0 0 0;
+					border: 2PX solid $theme_color;
+				}
+			}
+
+			&:last-child {
+				margin-right: 0;
+			}
+		}
+	}
+
+	// 重新上传、生成图片按钮
+	.action-btns {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background-color: #fff;
+		border-top: 1px solid rgba(0,0,0,.1);
+		border-bottom: 1px solid rgba(0,0,0,.1);
+
+		> a {
+			$height: 80px;
+			position: relative;
+			display: block;
+			size: 100% $height;
+			line-height: $height;
+			font-size: 28px;
+			&:after {
+				content: '';
+				height: 50%;
+				-s-position: absolute 50% 0 _ _;
+				transform: translateY(-50%);
+				background-color: rgba(0,0,0,.1);
+				width: 2px;
+			}
+			&:last-child {
+				&::after {
+					display: none;
+				}
+			}
+		}
+
+		.btn-reupload {
+			color: #333;
+		}
+
+		.btn-create {
+			color: $theme_color;
+		}
+	}
+}
+
+// 海报结果页
+.area-result {
+	overflow-y: auto;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	background-color: #fff;
+	// 海报展示
+	.poster {
+		flex: 1;
+		padding: 50px;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		box-sizing: border-box;
+		> img {
+			max-width: 100%;
+			max-height: 100%;
+			box-shadow: 0 0 30px gray;
+		}
+	}
+	// 底部按钮
+	.btns {
+		padding: 0 20px 60px;
+		text-align: center;
+		display: flex;
+		align-items: center;
+		justify-content: space-around;
+		button {
+			padding: 0.5em 1.5em;
+			border-radius: 3em;
+			border: 1px solid $theme_color;
+			color: $theme_color;
+			font-size: 28px;
+			background: transparent;
+			outline: none;
+			&.btn-save {
+				background-color: $theme_color;
+				color: #fff;
+			}
+		}
+	}
+}
+
+// 贴纸文字编辑弹层
+.edit-area {
+	-s-position: absolute 0 0 0 0;
+	background: rgba(0, 0, 0, 0.75);
+	z-index: 20181011;
+	transform: translateY(100%);
+	transition: all 300ms ease;
+	opacity: 0;
+	&.active {
+		opacity: 1;
+		transform: translateY(0);
+	}
+	.btn-cancel, .btn-save {
+		position: absolute;
+		top: 50px;
+		font-size: 14PX;
+	}
+	.btn-cancel {
+		left: 48px;
+		color: #fff;
+	}
+	.btn-save {
+		right: 48px;
+		color: $theme_color;
+	}
+
+	// 编辑区
+	.text {
+		margin: 140px 40px 20px;
+		outline: none;
+		font-size: 24PX;
+		line-height: 1.3;
+		textarea {
+			padding: 0;
+			width: 100%;
+			height: 100%;
+			background-color: transparent;
+			vertical-align: top;
+			outline: none;
+			border: none;
+			font-size: 50px;
+			line-height: 1.2;
+			height: 4.8em;
+			word-break: break-all;
+			// border: 1px solid #fff;
+
+			&::-webkit-input-placeholder {
+				color: gray;
+			}
+		}
+	}
+
+	.actions {
+		display: flex;
+		padding: 0 20px;
+		// align-items: center;
+		// justify-content: center;
+		justify-content: space-around;
+		.bg, .color {
+			position: relative;
+			display: block;
+			margin: 0 5px;
+			size: 72px;
+			> i {
+				-s-position: absolute 50% _ _ 50%;
+				transform: translate(-50%, -50%);
+				size: 50%;
+				border: 3px solid #fff;
+			}
+		}
+		.bg {
+			margin-right: 40px;
+			> i {
+				text-align: center;
+				border-radius: 0;
+				color: #fff;
+				font-style: normal;
+				font-size: 30px;
+				line-height: 1.25em;
+				font-weight: bold;
+			}
+
+			&.active {
+				> i {
+					background-color: #fff;
+					color: #999;
+				}
+			}
+		}
+		.color {
+			> i {
+				border-radius: 100%;
+			}
+			&.active {
+				> i {
+					size: 70%;
+				}
+			}
+		}
+	}
+}

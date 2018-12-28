@@ -1,0 +1,344 @@
+//------------------
+// mixin混合器
+//------------------
+
+/**
+ * 清除浮动
+ * @param  {[type]} $legacy-support-for-ie: null     [是否支持ie8-  默认不支持]
+ */
+ @mixin clearfix($legacy-support-for-ie: null) {
+    @if $legacy-support-for-ie {
+        *zoom: 1;
+    }
+    &:before, &:after {
+        content: "";
+        display: table;
+    }
+    &:after {
+        clear: both;
+    }
+}
+
+/**
+ * 透明度
+ * @param  {[type]} $opacity:.65         [透明数值 0-1]
+ * @param  {[type]} $support-for-ie:null [是否支持ie8-  默认不支持]
+ */
+@mixin opacity($opacity: .65, $support-for-ie: null) {
+	opacity: $opacity;
+	@if $support-for-ie {
+		$opacity-ie: $opacity * 100;
+		filter: alpha(opacity=$opacity-ie); //IE8
+	}
+}
+
+/**
+ * 背景半透明
+ * @param  {[type]} $color                 [色值 如：#f00]
+ * @param  {[type]} $opacity               [透明度  0-1]
+ * @param  {[type]} $support-for-ie:null   [是否支持ie  默认不支持]
+ */
+@mixin rgba($color, $opacity, $support-for-ie: null) {
+	background-color:rgba($color,$opacity);
+	@if $support-for-ie {
+		filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#{ie-hex-str(rgba($color,$opacity))},endColorstr=#{ie-hex-str(rgba($color,$opacity))});
+		:root & { //for ie9
+			filter: none;
+		}
+	}
+}
+
+//float 默认不支持ie
+@mixin float($direction: left, $support-for-ie: null) {
+	float: unquote($direction);
+	@if $support-for-ie {
+		_display: inline;
+	}
+}
+
+//inline-block
+@mixin inline-block($alignment: middle, $support-for-ie: null) {
+	display: inline-block;
+	@if $alignment and $alignment != none {
+		vertical-align: $alignment;
+	}
+	@if $support-for-ie {
+		*vertical-align: auto;
+		*display: inline;
+		*zoom: 1;
+	}
+}
+
+/**
+ * 最小宽高
+ * @param  {[type]} $type [width or height]
+ * @param  {[type]} $num  [数值]
+ */
+@mixin min-wh($type, $num) {
+	@if ($type == width or $type == both ) {
+		min-width: $num;
+		width: auto !important; 
+		_width: $num;
+	}
+	@if ($type == height or $type == both) {
+		min-height: $num;
+		height: auto !important; 
+		_height: $num;
+	}
+}
+
+/**
+ * input等输入框的默认样式重置
+ * @param  {[type]} $color [文字色值]
+ */
+@mixin placeholder($color) {
+	&::-webkit-input-placeholder {
+		color: $color; 
+	} 
+	&:-moz-placeholder {
+		color: $color;
+	} 
+	&::-moz-placeholder {
+		color: $color;
+	}
+	&:-ms-input-placeholder {
+		color: $color; 
+	}
+}
+
+/**
+ * 半透明遮罩
+ */
+@mixin mask($bg: rgba(17, 17, 17, 0.7), $zIndex: 1000) {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: $zIndex;
+	background-color: $bg;
+}
+
+/**
+ * 纯色三角箭头
+ * @param  {[type]} $direction [箭头方向]
+ * @param  {[type]} $width     [箭头宽度]
+ * @param  {[type]} $color     [箭头背景色]
+ */
+@mixin arrow($direction, $width, $color) {
+	width: 0;
+	height: 0;
+	@if $direction == top {
+		border-left: $width solid transparent;
+    	border-right: $width solid transparent;
+    	border-bottom: $width solid $color;
+	}
+	@if $direction == right {
+		border-top: $width solid transparent;
+    	border-bottom: $width solid transparent;
+		border-left: $width solid $color;
+	}
+	@if $direction == bottom {
+		border-left: $width solid transparent;
+    	border-right: $width solid transparent;
+    	border-top: $width solid $color;
+	}
+	@if $direction == left {
+		border-top: $width solid transparent;
+    	border-bottom: $width solid transparent;
+		border-right: $width solid $color;
+	}
+}
+
+/**
+ * 文字溢出显示点点点
+ * @param  {[type]} $line:1   [控制溢出行数]
+ */
+@mixin ellipsis($line: 1) {
+    @if $line == 1 {
+        white-space: nowrap;
+    } @else {
+		overflow: hidden;
+		display: -webkit-box;
+		-webkit-line-clamp: $line;
+		-webkit-box-orient: vertical;
+	}
+	text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+/**
+ * 居中
+ */
+@mixin center($type: flex, $width: true, $height: true) {
+	@if $type == flex {
+		display: flex;
+		@if type-of($width) == 'bool' and $width {
+			justify-content: center;
+		} @else {
+			@warn "#{$width} must be boolean" 
+		};
+		@if type-of($height) == 'bool' and $height {
+			align-items: center;
+		} @else {
+			@warn "#{$height} must be boolean"
+		}
+	};
+	@if $type == position {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		@if type-of($width) == 'number' and $width {
+			//如果不带单位，就转换成带单位
+			$width: if(unitless($width), $width * 1px, $width);
+			width: $width;
+			margin-left: -($width / 2);
+		}
+		@if type-of($height) == 'number' and $height {
+			//如果不带单位，就转换成带单位
+			$height: if(unitless($height), $height * 1px, $height);
+			height: $height;
+			margin-top: -($height / 2);
+		}
+
+		@if type-of($width) == 'bool' and type-of($height) == 'bool' {
+			transform: translate(if($width, -50%, 0), if($height, -50%, 0));
+		} @else {
+			@if type-of($width) == 'bool' and $width {
+				transform: translateX(-50%);
+			}
+			@if type-of($height) == 'bool' and $height {
+				transform: translateY(-50%);
+			}
+		}
+
+	};
+}
+
+/**
+ * inline-block center
+ * 让子元素垂直居中  
+ */
+ @mixin center-ib() {
+	font-size: 0;
+	& > *, &:after {
+		display: inline-block;
+		vertical-align: middle;
+	}
+	&:after {
+		content: '';
+		height: 100%;
+		width: 1px;
+	}
+}
+
+/**
+ * 使用原生滚动 & 隐藏滚动条
+ */
+@mixin scrollbar() {
+	white-space: nowrap;
+	-webkit-overflow-scrolling: touch;
+	overflow-x: auto;
+	overflow-y: hidden;
+	&::-webkit-scrollbar {
+		display: none;
+		height: 0;
+		opacity: 0;
+	}
+}
+
+/**
+ * 根据宽、高、色值、边框大小 设置一个向右箭头，如：查看更多 >
+ * @param  {[type]} $size  		[宽/高]
+ * @param  {[type]} $color  	[色值]
+ * @param  {[type]} $border  	[数值]
+ */
+@mixin sideArrow($size: 0.5em, $color: currentColor, $border: 1px) {
+	position: relative;
+	padding-right: $size * 2;
+	&:after {
+		content: '';
+		position: absolute;
+		top: 50%;
+		right: 5px;
+		border-top: $border solid $color;
+		border-right: $border solid $color;
+		width: $size;
+		height: $size;
+		transform: translateY(-50%) rotate(45deg);
+	}
+}
+
+/**
+ * 根据字号、行数、行高设置最大高
+ * @param  {[type]} $fontSize:   24px            [description]
+ * @param  {[type]} $line:       2             [description]
+ * @param  {[type]} $lineHeight: 1.5           [description]
+ * @return {[type]}              [description]
+ */
+@mixin maxHeight($fontSize: 24px, $line: 2, $lineHeight: 1.5) {
+	font-size: $fontSize;
+	line-height: $lineHeight;
+	height: $fontSize * $line * $lineHeight;
+	overflow: hidden;
+}
+
+/**
+ * css3圆形关闭按钮
+ *   $roundSize					圆形关闭按钮的宽、高
+ *   $lineColor 				里面x的色值
+ */
+@mixin icon-close($width: 58px, $height: 3px, $lineColor: #999) {
+	width: $width;
+	height: $width;
+	&:before, &:after {
+		content: '';
+		position: absolute;
+		background-color: $lineColor;
+		border-radius: $height;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%) rotate(-45deg)
+	}
+	&:before {
+		width:$width;
+		height: $height;
+	}
+	&:after {
+		width: $height;
+		height: $width;
+	}
+}
+
+//抢光啦 用于图片层上
+@mixin soldout($size: 120px, $fontsize: 24px, $opacity: 0.75) {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	margin: (- $size / 2) 0 0 (- $size / 2);
+	width: ($size);
+	height: ($size);
+	background: rgba(17, 17, 17, $opacity);
+	border-radius: 100%;
+	color: #fff;
+	line-height: $size;
+	text-align: center;
+	&:after {
+		content: "\62A2\5149\5566"; //抢光啦
+		font-size: $fontsize;
+	}
+}
+
+// Background Gradient: Top to Bottom
+@mixin bg-gradient-t2b($start-colour, $end-colour) {
+	background-color: $start-colour;
+	background-image: linear-gradient(top, $start-colour, $end-colour);
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#{ie-hex-str(rgba($start-colour,1))}, endColorstr=#{ie-hex-str(rgba($end-colour,1))});
+}
+
+// Background Gradient: Left to Right
+@mixin bg-gradient-l2r($start-colour, $end-colour) {
+	background-color: $start-colour;
+	background-image: linear-gradient(left, $start-colour, $end-colour);
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#{ie-hex-str(rgba($start-colour,1))}, endColorstr=#{ie-hex-str(rgba($end-colour,1))}, gradientType='1');
+}

@@ -1,0 +1,71 @@
+.preload {
+
+	$accent: #fc4a6e;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    -s-position: absolute 0 0 0 0;
+	background-color: $accent;
+	text-align: center;
+	
+	.text {
+		margin-top: 15px;
+		font-size: 32px;
+		color: #fff;
+	}
+
+    // Divi
+    .divi {
+        width: 150px;
+	}
+	
+    .outer {
+        fill: transparent;
+        stroke: #fff;
+        stroke-width: 12px;
+        stroke-dasharray: 150;
+        stroke-dashoffset: 0;
+        transform-origin: center;
+        animation: draw 4s infinite;
+    }
+
+    .inner {
+        fill: #fff;
+        transform-origin: center;
+        animation: fadeIn 4s infinite;
+    }
+
+    @keyframes fadeIn {
+        0% {
+            opacity: 1;
+        }
+
+        50% {
+            opacity: 0.8;
+            transform: scale(0.8);
+        }
+
+        100% {
+            opacity: 1;
+        }
+    }
+
+    @keyframes draw {
+        0% {
+            transform: scale(1);
+            stroke-dashoffset: 0;
+        }
+
+        50% {
+            opacity: 0.8;
+            transform: scale(0.8);
+            stroke-dashoffset: 1000;
+        }
+
+        100% {
+            transform: scale(1);
+            stroke-dashoffset: 0;
+        }
+    }
+}

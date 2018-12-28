@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover">
+<title></title>
+<style>
+[v-cloak] {display: none}
+</style>
+</head>
+<body>
+<div id="app" class="wrapper fullpage-container" v-cloak>
+    <div class="preload" v-if="!is_preload">
+        <div class="center">
+            <svg class="divi" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                viewBox="0 0 200 200" style="enable-background:new 0 0 200 200;" xml:space="preserve">
+                <g>
+                    <circle class="outer" cx="100" cy="100" r="95"></circle>
+                    <path class="outer" d="M100.2,6C47.8,6,5.4,48.5,5.4,100.8s42.5,94.8,94.8,94.8s94.8-42.5,94.8-94.8S152.5,6,100.2,6z M100.2,185.7 		c-46.9,0-84.8-38-84.8-84.8S53.3,16,100.2,16S185,54,185,100.8S147,185.7,100.2,185.7z"></path>
+                    <path class="inner" d="M101.7,51.7H74.9c-1,0-1.7,0.8-1.7,1.7V148c0,1,0.8,1.7,1.7,1.7l27.3,0c27.1,0,44.7-22.1,44.6-49.2 		C146.8,73.4,130,51.7,101.7,51.7z M101.7,139.8l-19.7,0V61.7l19.7,0.1c21.5,0,34.6,17.5,34.6,39S123.3,139.8,101.7,139.8z"></path>
+                </g>
+            </svg>
+            <p class="text">加载中..</p>
+        </div>
+    </div>
+    <div class="fullpage-wp" ref="pages" :style="oTransform" v-else>
+        <div class="page-1 page" :style="{backgroundImage:'url('+ cover +')'}">
+            <uploader :disabled="isLoading" class="btn-upload" @upload="invokeUpload"></uploader>
+        </div>
+        <div class="page-2 page" :class="{'page-blur': edit_board.show}">
+            <div class="area-canvas" ref="stageBox">
+                <div class="stage" :style="{
+                    width: stage.width + 'px',
+                    height: stage.height + 'px',
+                }">
+                    <v-touch 
+                        v-for="(cell, index) in stage.cells" 
+                        :key="cell.id"
+                        :id="cell.id" 
+                        :class="['cell', cell.config.cls, {selected:cell.config.selected}]"
+                        :data-index="cell.index"
+                        :style="cell.setStyle()" 
+                        @tap="stage.toggle($event, cell)"
+                        @pinch="cell.onMultiple($event)"
+                        @pinchstart="cell.onMultiple($event)"
+                        @pinchend="cell.onMultiple($event)"
+                        @rotate="cell.onMultiple($event)"
+                        @rotatestart="cell.onMultiple($event)"
+                        @rotateend="cell.onMultiple($event)"
+                        @pan="cell.onMultiple($event)"
+                        @panend="cell.onMultiple($event)"
+                        :enabled="{ 
+                            pinch: cell.config.enable_pinch,
+                            rotate: cell.config.enable_rotate,
+                            pan: cell.config.enable_pan
+                        }"
+                    >
+                        <v-touch 
+                            tag="i" 
+                            class="btn-edit" 
+                            v-if="cell.config.show_edit"
+                            @tap="openTextBoard('edit', cell)"
+                            :style="[cell.freeze()]"
+                        ></v-touch>
+                        <v-touch 
+                            tag="i" 
+                            class="btn-flip" 
+                            v-if="cell.config.show_flip"
+                            @tap="cell.flip()"
+                            :style="[cell.freeze()]"
+                        ></v-touch>
+                        <v-touch 
+                            tag="i"
+                            class="btn-drag"
+                            v-if="cell.config.enable_pinch || cell.config.enable_rotate"
+                            @panstart="cell.onSingle($event)"
+                            @pan="cell.onSingle($event)"
+                            @panend="cell.onSingle($event)"
+                            :style="[cell.freeze()]"
+                        ></v-touch>
+                        <v-touch 
+                            tag="i" 
+                            class="btn-close" 
+                            v-if="cell.config.show_del" 
+                            @tap="stage.del(index)"
+                            :style="[cell.freeze()]"
+                        ></v-touch>
+                        <v-touch 
+                            tag="i" 
+                            class="btn-copy" 
+                            @tap="stage.copy(cell)"
+                            v-if="cell.config.show_copy" 
+                            :style="[cell.freeze()]"
+                        ></v-touch>
+                        <img v-if="cell.config.img" :src="cell.config.img.src" :style="{ transform:`scale(${cell.translate.flip_x ? -1 : 1}, 1)`}" >
+                        <p 
+                            class="txt" 
+                            v-if="cell.config.type == 5"
+                            v-html="_n2br(cell.config.text)"
+                            :style="{
+                                fontSize: cell.config.font_size + 'px',
+                                color: cell.config.color,
+                                lineHeight: cell.config.line_height,
+                                padding: cell.config.padding + 'px'
+                            }"
+                        >
+                        </p>
+                    </v-touch>
+                </div>
+            </div>
+            <div class="area-actions" ref="actions">
+                <div class="action-tab" v-if="tabs.length > 1">
+                    <a 
+                        v-for="(tab, index) in tabs" 
+                        @click="toggle(index)"
+                        :class="{active:tab.active}" 
+                        href="javascript:;"
+                    ><span>{{tab.name}}</span></a>
+                    <a @click="openTextBoard('add')" href="javascript:;"><span>文字</span></a>
+                </div>
+                <div class="action-images">
+                    <ul :class="tab.cont_cls" v-for="(tab, idx) in tabs" v-show="tab.active">
+                        <template v-if="idx == 0">
+                            <li v-for="(bg, index) in bgs" @click="selectBg(index)" :class="{active: bgs[index].back == selected_bg}">
+                                <img v-if="bg.back" :src="thumb(bg.back)">
+                                <img v-if="bg.front" :src="thumb(bg.front)">
+                            </li>
+                        </template>
+                        <template v-if="idx == 1">
+                            <li v-for="(sticker, index) in stickers" @click="createSticker(index)">
+                                <img :src="sticker">
+                            </li>
+                        </template>
+                    </ul>
+                </div>
+                <div class="action-btns">
+                    <uploader button-text="重新上传" :disabled="isLoading" class="btn-reupload" @upload="invokeUpload"></uploader>
+                    <a href="javascript:;" class="btn-create" @click="createPoster" :disabled="isLoading">生成图片</a>
+                </div>
+            </div>
+        </div>
+        <div class="page-3 page">
+            <div class="area-result">
+                <div class="poster" ref="poster">
+                    <img v-if="poster" :class="{'stop-callout': isWeiXin}" :src="poster">
+                </div>
+                <div class="btns" ref="page3btns">
+                    <button class="btn-replay" @click.self="pagePrev">返回编辑</button>
+                    <button class="btn-replay" @click.self="replay">再做一张</button>
+                    <button class="btn-save" @click="saveToAlbum">保存相册</button>
+                </div>
+                <div class="iphonex-blank"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="edit-area" :class="{active: edit_board.show}">
+        <a @click="edit_board.show = false" class="btn-cancel" href="javascript:;">取消</a>
+        <a @click="saveTextBoard" class="btn-save" href="javascript:;">完成</a>
+        <div 
+            class="text" 
+            :style="{color:edit_board.selected_color}"
+        >
+            <textarea placeholder="点击编辑文字" ref="textarea" v-model="edit_board.text" id=""></textarea>
+        </div>
+        <div class="actions">
+            <span 
+                class="color" 
+                v-for="(color, idx) in edit_board.colors"
+                @click="edit_board.selected_color = color" 
+                :class="{active: edit_board.selected_color == color}"
+            >
+                <i :style="{backgroundColor:color}"></i>
+            </span>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

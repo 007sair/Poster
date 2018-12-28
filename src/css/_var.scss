@@ -1,0 +1,27 @@
+/**
+ * 变量
+ */
+
+// 主题色
+$theme_color: #f891b1;
+
+// 背景图比例
+$bg_ratio: 750 / 1107;
+
+// 封面按钮icon
+$btn_cover: 'https://m.360buyimg.com/pop/jfs/t20593/112/1898956767/20756/f95f1fc3/5b3d8442N26bca955.png';
+
+// 翻转按钮
+$btn_flip: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADYAAAAwCAYAAABaHInAAAACfUlEQVRoQ+2ZPYtTURCGn1dQtBBBEAQLCwsLO9nGagUFEbQRttpCEKxs1F786MUfIFgIVoIoIiIoYq/lFhZ2CqIgiM2C4CsjyXJMcpNzj7k38XKnS3LOmXlm5nzMRDQstp8CZ0bUPJM0+t1cLdFcV5uwWA82Zw/3ESt1aJ+KpZ6rmNenYqlD+1Qs9VwTqWh7N7BT0tcqu0oiZnsfsCnpRylv8R6zvR94CZyX9G7OYEeB+8BJSZ9L4IrAbB8GXgEHgJWGwMJZn4ATkt7XhasNZntlEKk9A2VNgoWK74PIva0DVwvM9mngUeyrREnTYKFqEzgn6XkuXDaY7QvAXWDbyOJtgIXKX8BFSfdy4LLAbN8Arlcs2BbYUP1NSWHPVJkKZjuiE6fT+pRV2gYLUyJqEb2I4kSpBLMd+yj2U+yrabIIsLAn9lvsu9h/YzIRzPZe4EUc5bNC3vBxP0t9nJSnJH0bHTgGZvvg4I46NGvVwe+LitjQvA/AcUkfU3v/ArN9BHgNxJMmVxYNFnbG6yReKRtDo7fAbK8C0XiJ918dWQawsDfelWclvYkPf8BsrwEPgO11iJYkFVOTfwJrkp7I9lXgdgHQcMqyRGxoj4FLAXYZuNMhsEC50sVUXJf0sNuHx1ZydvG4T+C6d0EncN17UiVw3XsEJ3DdK1vSe832LeBaxV3X9gX974XmCFz3WgNJakbR+RjYkUC3EbHmmjkJ3LFB9dpW+y2KyCgmm2u/JXBtNkxXJUUxWUuyulSTVuxkizuJXBSluyR9qXLnf/enRG5elIDlrj1tXHEq5irvwXI9lTmuj1imo8aG9alY6rmKeX0qljq0T8VSz1XM+w30XzAiNLaqJwAAAABJRU5ErkJggg==';
+
+// 拖拽按钮
+$btn_drag: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADwAAAA8CAMAAAANIilAAAAAmVBMVEUAAAD////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////VHQRUAAAAMnRSTlMA/AMHltwXxBPIu7SQgUs5Lw4K+PThpIh0XSgkEPHtvmlXNunlznFlUR3RqXtDP52cH/2KAK4AAAGrSURBVEjH7ZTZcoIwFIYDgYKAgqjsIuBStWrb8/4P15w4o2UkLLnpdIZvBi748+eQs4SMjPxH3uKLZtuBE1XqUGdkwIM8mA2wzsMl1Jlc+3rfc3jFeutjVTXgKEZYzGbxIdgCZ1d1ezMLkFXxjFR9ALKIO+NucN06orWvHt9R6cqbg6v05OX7lO+ZtHpjXGOYDcpRwV3nbTXKcUXWqBXAmBIx+HNLTyBqKIoLlq2ZHolUf8dUrUk5gKGSC1O3vrh5MDRtOCw/z4S9Dy1lXDG9oVwUGKbCapl11PFLkA189oR6wnrcsPWaZhA7iD0OJlyUUoq/1jTdNjwpiQDM94m8kj69iigyz6grEjiaSUQYIrN3jzpta1+drUhF7bcoKGkjx4IKujPtuCe/8UogkmB/WrJmm8+NHAl2USJpxnvwLOmtgA+VFCYO5ETO6/M7+SoX10BvSDqhZUlJHVdHr6V2mwMA/Uh+cfoEZG+Sbha4Ug9d9e4sbQUQy+/bSIiib4z99jGptF9iHYxd5+ySvqTOsmadxOqgsh6D1f2o603okeHQ5OZ6bMZHRv6IH/SBTKNhsuPGAAAAAElFTkSuQmCC';
+
+// 编辑按钮
+$btn_edit: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAMAAABg3Am1AAAAilBMVEUAAAD////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////2N2iNAAAALXRSTlMAQP33MXMC89JOCwTn4sS4nZE3KiYVEAfs3MqzqqN8RxnwiGxVPh3AvKiDZWTwmc7nAAABMElEQVRIx92V13KDMBBFhegdTDXF4CR2qv7/9yLHNkTs+MKzzxsz54qd3VmJPTl5Xwftebv/woXEdjf74go/bPNfxURXbQm86XPiw9qSMII5ka7aO3nm6EwB3ce61YqoZMyLp8QOB1Kp7M8ymN4DBvR//pz6In3za0ke8jV+K/wyssEWki/k50dxg5vyMwtleegH5V7MJLJZRWPnwPcj8Z9Ynl3BFvVCxSkYxBRL3qE/cBKIkZ/ZxA9G4Bch8XU04qoRBLhuHfXhsh2o3yHfpQ1qKrRfOvFDNLMxoA3KgO85xOcuvlMIJkMkxO8ZJF76kY8DzrJBJcPUqm9nDOOrPh9WHwLaIMxJ8ZMNN7XSIIsKaJOdkq2T3u1ja2oPMOigMVx5Dfh64FMdxElbwWBPxC9MXWteGwSFbQAAAABJRU5ErkJggg==';
+
+// +1按钮
+$btn_copy: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAMAAABg3Am1AAAAZlBMVEUAAAD///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////+Vn2moAAAAIXRSTlMAgMA87yl9yg379M+zRhzju5mUaGJaPzcyJNPHvqeBBgX0m25LAAAAoUlEQVRIx+3UyQ4CIRBFUbrtgZ7nyfn9/09KRRaSgClj1JhwFoRa3BWhhOd91bWqBZ+cTjl2gqke2gwKM6gKEHdQz4sxJ3geyAYoXwliKGaQ7bsx5wdLJdUZsQPiA20LtJ6Csx6GizM4wKp3Bg2sWmdQwKp0BmsZ3qVQQu0Y/9M7/DKYQkJro6BLx/iihvTtQOZAxA7IlgTr4zwHhlF4H3IDy1AoGiZeXMwAAAAASUVORK5CYII=';
+
+// 删除按钮
+$btn_del: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADwAAAA8CAMAAAANIilAAAAAPFBMVEUAAAD4krH6lLL4krL/n7f6k7P/l7j5kbL/n7/6lLP5kbH4kbH5krL6kbH5krH5k7P6k7L5k7H/qv/5kbGggKLBAAAAE3RSTlMA6SvACmEXyhA179+2kIp/Y1wDcAPcYwAAANNJREFUSMft0zsKwzAQRVFZcmQ7duLP7H+vcRGY4k4Er0ml2z4OCMSkXu+f1aM21nyOjXV52pB/rg+zaW5Zcx1Y17F1TdvQ9bauab+VEB9m0LB3NcJ1gI7slsIyNW0ZCakVS61YasVSK5aaVtGwit5hBQ0raFhBwwoaVtNutXbzFo36/+JKBAstWGjBQgsWWrJlGQSNG8yCxv1CCxZasIKGFTSsoGElnWFDvV4RPmFjXSM8TrCRfqeweYKlfnFx7ZbabaiLbW6hV39zWG2NV029ntYHBJExLyukLbgAAAAASUVORK5CYII=';

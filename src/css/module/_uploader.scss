@@ -1,0 +1,18 @@
+/*
+ * 上传组件样式
+ */
+
+ .cp-upload {
+	position: relative;
+	overflow: hidden;
+
+    input[type=file] {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        border: none;
+    }
+}

@@ -1,0 +1,64 @@
+/*
+ * PostCSS用法
+ * -----------
+ * 1. 本代码仅展示postcss用法
+ * 2. 本文件会经sass编译，所以某些postcss功能在这里会有冲突，甚至报错，请慎用
+ */
+
+/*** px2rem的配置 ***/
+@use postcss-pxtorem {
+    rootValue: 75; //基数  1rem = 75px
+    replace: true; //false：不替换当前属性为px，会再生成一条相同的属性，rem的优先级更高
+    propList: ['*']; //匹配属性列表，*号代表匹配所有属性
+}
+
+/*
+ * 定义变量
+ * by postcss-cssnext
+ */
+:root {
+    --red: #f00;
+    --blue: blue;
+    --fontSize: 1rem;
+}
+
+.var {
+    color: var(--red); //使用变量
+    font-size: calc(var(--fontSize) * 2);
+}
+
+
+//自定义选择器
+@custom-selector :--heading h1, h2, h3, h4, h5, h6;
+:--heading {
+    font-weight: bold;
+} 
+
+/**
+ * 添加前缀
+ * by postcss-cssnext like autoprefixer
+ */
+.flex {
+    display: flex;
+}
+
+/**
+ * 简写
+ * by postcss-short 需注意与sass运算冲突
+ */
+.short {
+	size: 10px;
+    -s-position: absolute 1px 2px _ 4px;
+    margin: _ 10px; 
+    color: blue red;
+    overflow: hidden auto;
+    border: 1px 2px / solid / #f00;
+    border-left-radius: 3px;
+    font-size: 12px / 20px;
+}
+
+
+
+//----------------------------------------//
+// 以上输出结果 请自行 import "postcss.scss" //
+//----------------------------------------//

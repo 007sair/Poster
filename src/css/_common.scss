@@ -1,0 +1,45 @@
+/* 公共样式 */
+.fl {
+    float: left;
+}
+
+.fr {
+    float: right;
+}
+
+.clearfix {
+    @include clearfix;
+}
+
+.sticky {
+    position: sticky !important;
+    position: -webkit-sticky !important;
+}
+
+.hide {
+    display: none;
+}
+
+[v-cloak] {
+  display: none;
+}
+
+//解决移动端div点击事件不可点的bug
+[class^=J_], [class^=js_], [class*=btn-] { 
+    cursor: pointer;
+}
+
+.stop-callout {
+    -webkit-touch-callout: none;
+}
+
+.icon-svg {
+    width: 1em;
+    height: 1em;
+}
+
+@media (min-width: 640px) {
+    html {
+        font-size: 64PX !important;
+    }
+}
