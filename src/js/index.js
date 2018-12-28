@@ -463,7 +463,7 @@ new Vue({
             document.body.appendChild(el)
 
             var qrcode = new QRCode(el, {
-                text: 'http://www.baidu.com',
+                text: 'http://007sair.github.io/demo/mixin_pic/index.html?v=' + (+new Date()),
                 width: 240,
                 height: 240,
                 colorDark: "#000000",
