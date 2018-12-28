@@ -1,6 +1,8 @@
 # 基于`canvas`的海报生成工具
 
-[Demo](http://007sair.github.io/demo/mixin_pic/index.html?v=201809191806)
+[DEMO](http://007sair.github.io/demo/mixin_pic/index.html?v=201809191806)
+
+![DEMO](./demo.png)
 
 基于`canvas`的图片合成，可以将人像、贴纸进行缩放、旋转、合成等操作，生成高清海报图。
 
