@@ -430,7 +430,7 @@ new Vue({
                     // .rect('#000')
                     // .drawImage(poster_footer, 0, 0, POSTER_WIDTH, foot_height)
                     .drawText('长按图片扫描二维码\n马上制作一张', 50, 'center', {
-                        font_size: 20,
+                        font_size: this.stage.width / 20, // 字体大小也要按照舞台宽度计算
                         line_height: 2,
                         // bg_color: '#f00',
                         bold: '900'
